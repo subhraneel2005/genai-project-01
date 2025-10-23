@@ -147,7 +147,6 @@ function InnerCanvas() {
       zoomOnPinch
       zoomOnDoubleClick={false}
     >
-      <Background gap={12} size={1} />
       <Controls />
     </ReactFlow>
   );
