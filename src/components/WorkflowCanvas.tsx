@@ -2,10 +2,7 @@
 
 import React, { useCallback } from "react";
 import {
-  Background,
   Controls,
-  Handle,
-  Position,
   useNodesState,
   useEdgesState,
   addEdge,
@@ -14,46 +11,8 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import DottedArrowEdge from "./DottedArrowEdge";
-
-// --- Custom Node Component ---
-const AgentNode = ({ data }: any) => {
-  return (
-    <Card className="w-80 shadow-md border-muted">
-      {!data.isFirst && <Handle type="target" position={Position.Left} />}
-      {!data.isLast && <Handle type="source" position={Position.Right} />}
-
-      <CardHeader className="pb-2">
-        <CardTitle className="text-base font-semibold">{data.label}</CardTitle>
-        <CardDescription className="text-xs">
-          {data.description}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-2 items-start">
-        <p className="text-sm text-muted-foreground">{data.content}</p>
-      </CardContent>
-      <CardFooter>
-        <div className="flex justify-end gap-2 mt-2">
-          <Button size="sm" variant="outline">
-            Edit
-          </Button>
-          <Button size="sm" variant="outline">
-            Delete
-          </Button>
-        </div>
-      </CardFooter>
-    </Card>
-  );
-};
+import AgentNode from "./AgentNode";
 
 const initialNodes = [
   {
@@ -152,7 +111,6 @@ function InnerCanvas() {
   );
 }
 
-// --- Main Export ---
 export default function WorkflowCanvas() {
   return (
     <div className="w-full h-full">
