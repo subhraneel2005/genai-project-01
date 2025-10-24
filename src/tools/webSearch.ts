@@ -23,6 +23,14 @@ const webSearchTool = tool({
       .default(5)
       .describe("The number of top search results to return."),
   }),
+  outputSchema: z.array(
+    z.object({
+      title: z.string().describe("The title of the search result."),
+      url: z.string().url().describe("The URL of the search result."),
+      snippet: z.string().optional().describe("Optional snippet/summary."),
+      source: z.string().optional().describe("Optional source/domain name."),
+    })
+  ),
   execute: async ({ query, numResults }) => {
     try {
       const response = await fetch(GOOGLE_SEARCH_BASE_URL!, {

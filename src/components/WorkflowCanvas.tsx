@@ -13,42 +13,42 @@ import "@xyflow/react/dist/style.css";
 
 import DottedArrowEdge from "./DottedArrowEdge";
 import AgentNode from "./AgentNode";
+import WebSearchNode from "./WebSearchNode";
+import ReportGeneratorNode from "./ReportGeneratorNode";
 
 const initialNodes = [
   {
     id: "1",
-    type: "agentNode",
+    type: "webSearchNode",
     position: { x: 0, y: 0 },
     data: {
-      label: "Summarizer Agent",
-      description: "Summarizes text using AI",
-      content: "Takes long-form text and outputs concise summaries",
-      isFirst: true, // <--- mark first node
+      label: "Web Search Agent",
+      description: "Searches the web for information",
+      query: "",
+      sources: [],
+      isFirst: true,
       isLast: false,
+      onSearch: (query: string) => {
+        console.log("Searching for:", query);
+        // TODO: Implement search logic here
+        // Example: Call your web search tool API
+        // Then update node with results using updateNodeData
+      },
     },
   },
+
   {
     id: "2",
-    type: "agentNode",
-    position: { x: 350, y: 150 },
-    data: {
-      label: "Telegram Agent",
-      description: "Sends messages via Telegram",
-      content: "Uses Telegram Bot API for communication",
-      isFirst: false,
-      isLast: false,
-    },
-  },
-  {
-    id: "3",
-    type: "agentNode",
+    type: "reportGeneratorNode",
     position: { x: 700, y: 0 },
     data: {
-      label: "Gmail Agent",
-      description: "Reads and sends emails",
-      content: "Integrated with Gmail API",
+      label: "Report Generator",
+      description: "Generates comprehensive reports",
+      topic: "",
+      markdown: "",
+      isGenerating: false,
       isFirst: false,
-      isLast: true, // <--- mark last node
+      isLast: true,
     },
   },
 ];
@@ -57,6 +57,8 @@ const initialEdges: any[] = [];
 
 const nodeTypes = {
   agentNode: AgentNode,
+  webSearchNode: WebSearchNode,
+  reportGeneratorNode: ReportGeneratorNode,
 };
 
 // --- Inner Canvas (for ReactFlowProvider) ---
@@ -86,6 +88,36 @@ function InnerCanvas() {
   const edgeTypes = {
     dottedArrow: DottedArrowEdge,
   };
+
+  // Helper function to update node data dynamically
+  const updateNodeData = useCallback(
+    (nodeId: string, newData: any) => {
+      setNodes((nds) =>
+        nds.map((node) =>
+          node.id === nodeId
+            ? { ...node, data: { ...node.data, ...newData } }
+            : node
+        )
+      );
+    },
+    [setNodes]
+  );
+
+  // Example: Handle search completion
+  const handleSearchComplete = useCallback(
+    (nodeId: string, sources: any[]) => {
+      updateNodeData(nodeId, { sources, isSearching: false });
+    },
+    [updateNodeData]
+  );
+
+  // Example: Handle report generation stream
+  const handleReportStream = useCallback(
+    (nodeId: string, markdown: string) => {
+      updateNodeData(nodeId, { markdown, isGenerating: true });
+    },
+    [updateNodeData]
+  );
 
   return (
     <ReactFlow
