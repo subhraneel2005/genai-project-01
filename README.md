@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🧩 Multi-Agent Workflow System
 
-## Getting Started
+An AI-powered content pipeline that automates **research, content creation, and distribution** across multiple platforms.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Flow Overview
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. **🧠 Research Agent** — Searches the web for trending topics, summarizes insights, and generates clean structured reports.
+2. **✍️ Social Media Agent** — Uses the research to create engaging posts for LinkedIn and Twitter/X.
+3. **📢 Mod Agent** — Distributes the finalized posts to Discord, Telegram, and Gmail newsletters.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🧠 Research Agent
 
-## Learn More
+**Purpose:** Discover and summarize trending topics from the web.  
+**Tools:**
 
-To learn more about Next.js, take a look at the following resources:
+- 🔍 **Web Search Tool** — Finds trending or relevant information.
+- 🧾 **Summarizer Tool** — Condenses large text or reports into concise summaries.
+- 📄 **Report Generator** — Creates structured reports (Markdown or PDF format).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## ✍️ Social Media Agent (Twitter/X, LinkedIn)
 
-## Deploy on Vercel
+**Purpose:** Turn research data into social-ready content.  
+**Tools:**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- 🏷️ **Title Generator** — Creates catchy titles and hooks.
+- ✨ **Main Content Generator** — Writes full posts or threads.
+- 📰 **Newsletter Generator** — Expands content into long-form newsletters.
+- 🖼️ **Thumbnail/Image Generator** — Designs visuals for posts.
+- 💬 **Post Generator** — Formats posts for both LinkedIn and Twitter.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 📢 Mod Agent (Discord, Telegram, Gmail)
+
+**Purpose:** Automate content delivery to communities and subscribers.  
+**Tools:**
+
+- 💬 **Discord Tool** — Sends daily posts to Discord groups.
+- 📲 **Telegram Tool** — Shares daily posts in Telegram channels.
+- ✉️ **Gmail Tool** — Sends newsletters via Gmail.
+
+---
+
+## 🧩 Summary
+
+| Agent              | Purpose                           | Platforms                | Key Tools                                |
+| ------------------ | --------------------------------- | ------------------------ | ---------------------------------------- |
+| Research Agent     | Find & summarize trends           | Web                      | Web Search, Summarizer, Report Generator |
+| Social Media Agent | Write social & newsletter content | Twitter, LinkedIn        | Title, Post, Thumbnail Generators        |
+| Mod Agent          | Distribute content                | Discord, Telegram, Gmail | Posting & Newsletter Tools               |
+
+---
+
+### 🛠️ Tech Stack (Suggested)
+
+- **Framework:** Next.js / Node.js
+- **AI SDK:** Vercel AI SDK (`@ai-sdk/google`, `@ai-sdk/openai`)
+- **Storage:** Supabase / MongoDB
+- **Automation:** CRON jobs or serverless triggers
+
+---
