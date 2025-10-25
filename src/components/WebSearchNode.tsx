@@ -35,7 +35,7 @@ const WebSearchNode = ({ data }: any) => {
     setError(null);
 
     try {
-      const response = await fetch("/api/agents/research", {
+      const response = await fetch("/api/tools/search", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query }),
@@ -46,7 +46,8 @@ const WebSearchNode = ({ data }: any) => {
       const text = await response.text();
 
       // Parse the "Summary:" and "Results:" sections safely
-      const summaryMatch = text.match(/Summary:\s*(.*?)\nResults:/);
+      // Match Summary: <text> Results:
+      const summaryMatch = text.match(/Summary:\s*([\s\S]*?)\nResults:/);
       const resultsMatch = text.match(/Results:\s*(\[[\s\S]*\])$/);
 
       const extractedSummary = summaryMatch ? summaryMatch[1].trim() : "";

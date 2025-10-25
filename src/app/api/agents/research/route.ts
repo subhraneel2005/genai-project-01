@@ -1,6 +1,7 @@
 // src/app/api/research/route.ts
 import { NextResponse } from "next/server";
 import { researchAgent, webSearchAgent } from "@/agents/researchAgent";
+import { convertToModelMessages } from "ai";
 
 export async function POST(req: Request) {
   const { query } = await req.json();
