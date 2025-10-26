@@ -73,7 +73,7 @@ const WebSearchNode = ({ data }: any) => {
   };
 
   return (
-    <Card className="w-96 shadow-sm border-slate-200 transition-all">
+    <Card className="w-96 shadow-sm border-border border transition-all">
       {!data.isFirst && (
         <Handle
           type="target"
@@ -117,7 +117,7 @@ const WebSearchNode = ({ data }: any) => {
             disabled={isSearching || !query.trim()}
           >
             {isSearching ? (
-              <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              <div className="h-4 w-4 border-2 border-border border-t-transparent rounded-full animate-spin" />
             ) : (
               <Search className="h-4 w-4" />
             )}
@@ -140,7 +140,7 @@ const WebSearchNode = ({ data }: any) => {
 
         {/* Summary */}
         {summary && (
-          <div className="p-2 text-xs bg-slate-50 rounded-md">
+          <div className="p-2 text-xs rounded-md">
             <strong>Summary:</strong> {summary}
           </div>
         )}

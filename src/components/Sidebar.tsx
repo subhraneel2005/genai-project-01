@@ -64,11 +64,11 @@ export function Sidebar() {
 
       <SheetContent
         side="left"
-        className="w-[265px] top-16 fixed overflow-y-auto h-[calc(100vh-4rem)] flex flex-col border-r border-slate-200 bg-white"
+        className="w-[265px] top-16 fixed overflow-y-auto h-[calc(100vh-4rem)] flex flex-col border-r border-border"
         onInteractOutside={(e) => e.preventDefault()}
       >
         {/* HEADER */}
-        <SheetHeader className="flex-shrink-0 px-4 py-3 border-b border-slate-100">
+        <SheetHeader className="flex-shrink-0 px-4 py-3 border-b border-border">
           <SheetTitle className="text-base font-semibold flex items-center gap-2">
             <Bot className="h-4 w-4 text-indigo-500" />
             Agents & Tools
@@ -81,7 +81,7 @@ export function Sidebar() {
             <div key={index}>
               <div className="flex items-center gap-2 mb-3 px-1">
                 {agent.icon}
-                <h3 className="text-sm font-semibold text-slate-800">
+                <h3 className="text-sm font-semibold text-primary">
                   {agent.name}
                 </h3>
               </div>
@@ -90,7 +90,7 @@ export function Sidebar() {
                   <Button
                     key={idx}
                     variant="ghost"
-                    className="justify-start text-xs text-slate-700 hover:bg-slate-100 gap-2 h-7 px-2"
+                    className="justify-start text-xs gap-2 h-7 px-2"
                   >
                     {tool.icon}
                     {tool.name}
