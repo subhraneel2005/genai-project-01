@@ -4,6 +4,7 @@ import { useState } from "react";
 import {
   Sheet,
   SheetContent,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -18,6 +19,7 @@ import {
   FileText,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { UserHoverCard } from "./UserHoverCard";
 
 export function Sidebar() {
   const [open, setOpen] = useState(true);
@@ -56,7 +58,7 @@ export function Sidebar() {
       },
     },
     {
-      name: "Flashcards Generator Agent",
+      name: "Flashcards Agent",
       description: "Generates study flashcards automatically.",
       icon: <Notebook className="h-5 w-5 text-muted-foreground" />,
       type: "agentNode",
@@ -118,7 +120,7 @@ export function Sidebar() {
               draggable
               onDragStart={(e) => onDragStart(e, agent)}
             >
-              <CardContent className="px-3 py-1 flex items-start gap-3">
+              <CardContent className="flex items-start gap-3">
                 <div className="flex-shrink-0">{agent.icon}</div>
                 <div>
                   <h3 className="text-sm font-medium">{agent.name}</h3>
