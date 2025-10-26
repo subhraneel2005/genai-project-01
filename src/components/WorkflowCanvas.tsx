@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback } from "react";
+import React, { useCallback, useRef } from "react";
 import {
   Controls,
   useNodesState,
@@ -8,6 +8,7 @@ import {
   addEdge,
   ReactFlow,
   ReactFlowProvider,
+  useReactFlow,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
@@ -30,13 +31,9 @@ const initialNodes = [
       isLast: false,
       onSearch: (query: string) => {
         console.log("Searching for:", query);
-        // TODO: Implement search logic here
-        // Example: Call your web search tool API
-        // Then update node with results using updateNodeData
       },
     },
   },
-
   {
     id: "2",
     type: "reportGeneratorNode",
@@ -65,6 +62,8 @@ const nodeTypes = {
 function InnerCanvas() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const reactFlowWrapper = useRef<HTMLDivElement>(null);
+  const { screenToFlowPosition } = useReactFlow();
 
   const onConnect = useCallback(
     (params: any) =>
@@ -89,7 +88,44 @@ function InnerCanvas() {
     dottedArrow: DottedArrowEdge,
   };
 
-  // Helper function to update node data dynamically
+  // Handle drop event
+  const onDrop = useCallback(
+    (event: React.DragEvent) => {
+      event.preventDefault();
+
+      const data = event.dataTransfer.getData("application/reactflow");
+      if (!data) return;
+
+      const { type, data: nodeData } = JSON.parse(data);
+
+      // Calculate position on canvas
+      const position = screenToFlowPosition({
+        x: event.clientX,
+        y: event.clientY,
+      });
+
+      // Create new node
+      const newNode = {
+        id: `${Date.now()}`, // Generate unique ID
+        type,
+        position,
+        data: {
+          ...nodeData,
+          isFirst: false,
+          isLast: false,
+        },
+      };
+
+      setNodes((nds) => [...nds, newNode]);
+    },
+    [screenToFlowPosition, setNodes]
+  );
+
+  const onDragOver = useCallback((event: React.DragEvent) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
+  }, []);
+
   const updateNodeData = useCallback(
     (nodeId: string, newData: any) => {
       setNodes((nds) =>
@@ -103,43 +139,31 @@ function InnerCanvas() {
     [setNodes]
   );
 
-  // Example: Handle search completion
-  const handleSearchComplete = useCallback(
-    (nodeId: string, sources: any[]) => {
-      updateNodeData(nodeId, { sources, isSearching: false });
-    },
-    [updateNodeData]
-  );
-
-  // Example: Handle report generation stream
-  const handleReportStream = useCallback(
-    (nodeId: string, markdown: string) => {
-      updateNodeData(nodeId, { markdown, isGenerating: true });
-    },
-    [updateNodeData]
-  );
-
   return (
-    <ReactFlow
-      nodes={nodes}
-      edges={edges}
-      onNodesChange={onNodesChange}
-      onEdgesChange={onEdgesChange}
-      onConnect={onConnect}
-      nodesConnectable={true}
-      nodeTypes={nodeTypes}
-      edgeTypes={edgeTypes}
-      fitView
-      fitViewOptions={{ padding: 0.7 }}
-      minZoom={0.3}
-      maxZoom={1.5}
-      panOnDrag
-      zoomOnScroll
-      zoomOnPinch
-      zoomOnDoubleClick={false}
-    >
-      <Controls />
-    </ReactFlow>
+    <div ref={reactFlowWrapper} className="w-full h-full">
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        onDrop={onDrop}
+        onDragOver={onDragOver}
+        nodesConnectable={true}
+        nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
+        fitView
+        fitViewOptions={{ padding: 0.7 }}
+        minZoom={0.3}
+        maxZoom={1.5}
+        panOnDrag
+        zoomOnScroll
+        zoomOnPinch
+        zoomOnDoubleClick={false}
+      >
+        <Controls />
+      </ReactFlow>
+    </div>
   );
 }
 

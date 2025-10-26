@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
-import TopNav from "@/components/TopNav";
+import NavWrapper from "@/clientWrapper/NavWrapper";
 
 export const metadata: Metadata = {
   title: "GenAI Project 01",
@@ -18,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={`${GeistSans.className} antialiased`}>
-        <TopNav />
+        <NavWrapper />
         {children}
       </body>
     </html>
