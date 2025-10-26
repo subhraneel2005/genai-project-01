@@ -16,39 +16,9 @@ import DottedArrowEdge from "./DottedArrowEdge";
 import AgentNode from "./AgentNode";
 import WebSearchNode from "./WebSearchNode";
 import ReportGeneratorNode from "./ReportGeneratorNode";
+import EmptyState from "./EmptyMessage";
 
-const initialNodes = [
-  {
-    id: "1",
-    type: "webSearchNode",
-    position: { x: 0, y: 0 },
-    data: {
-      label: "Web Search Agent",
-      description: "Searches the web for information",
-      query: "",
-      sources: [],
-      isFirst: true,
-      isLast: false,
-      onSearch: (query: string) => {
-        console.log("Searching for:", query);
-      },
-    },
-  },
-  {
-    id: "2",
-    type: "reportGeneratorNode",
-    position: { x: 700, y: 0 },
-    data: {
-      label: "Report Generator",
-      description: "Generates comprehensive reports",
-      topic: "",
-      markdown: "",
-      isGenerating: false,
-      isFirst: false,
-      isLast: true,
-    },
-  },
-];
+const initialNodes: any[] = [];
 
 const initialEdges: any[] = [];
 
@@ -140,7 +110,12 @@ function InnerCanvas() {
   );
 
   return (
-    <div ref={reactFlowWrapper} className="w-full h-full">
+    <div ref={reactFlowWrapper} className="w-full h-full relative">
+      {nodes.length === 0 && (
+        <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+          <EmptyState />
+        </div>
+      )}
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -152,8 +127,7 @@ function InnerCanvas() {
         nodesConnectable={true}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
-        fitView
-        fitViewOptions={{ padding: 0.7 }}
+        defaultViewport={{ x: 0, y: 0, zoom: 1 }}
         minZoom={0.3}
         maxZoom={1.5}
         panOnDrag

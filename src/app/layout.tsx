@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { GeistSans } from "geist/font/sans";
 import NavWrapper from "@/clientWrapper/NavWrapper";
+import PageTransition from "@/clientWrapper/TransitionWrapper";
+import { ThemeProvider } from "next-themes";
 
 export const metadata: Metadata = {
   title: "GenAI Project 01",
@@ -15,10 +17,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="light">
       <body className={`${GeistSans.className} antialiased`}>
-        <NavWrapper />
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <NavWrapper />
+          <PageTransition>{children}</PageTransition>
+        </ThemeProvider>
       </body>
     </html>
   );

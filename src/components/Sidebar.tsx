@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { UserHoverCard } from "./UserHoverCard";
+import MinimapToggle from "./MinimapToggle";
 
 export function Sidebar() {
   const [open, setOpen] = useState(true);
@@ -100,7 +101,7 @@ export function Sidebar() {
 
       <SheetContent
         side="left"
-        className="w-[280px] top-16 fixed overflow-y-auto h-[calc(100vh-4rem)] flex flex-col border-r border-border select-none"
+        className="w-[330px] top-16 fixed overflow-y-auto h-[calc(100vh-4rem)] flex flex-col border-r border-border select-none"
         onInteractOutside={(e) => e.preventDefault()}
       >
         <SheetHeader className="flex-shrink-0 px-4 py-3 border-b border-border">
@@ -112,7 +113,7 @@ export function Sidebar() {
           </p>
         </SheetHeader>
 
-        <div className="flex-1 overflow-y-auto px-4 py-5 space-y-4">
+        <div className="flex-1 overflow-y-hidden px-4 py-5 space-y-4">
           {agents.map((agent, index) => (
             <Card
               key={index}
@@ -132,6 +133,9 @@ export function Sidebar() {
             </Card>
           ))}
         </div>
+        <SheetFooter>
+          <MinimapToggle />
+        </SheetFooter>
       </SheetContent>
     </Sheet>
   );
