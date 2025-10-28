@@ -17,10 +17,13 @@ import {
   BookMarked,
   Notebook,
   FileText,
+  HelpCircle,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { UserHoverCard } from "./UserHoverCard";
 import MinimapToggle from "./MinimapToggle";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
+import { ScrollArea } from "./ui/scroll-area";
 
 export function Sidebar() {
   const [open, setOpen] = useState(true);
@@ -42,7 +45,7 @@ export function Sidebar() {
       name: "Chat with PDF Agent",
       description: "Chat with your uploaded PDFs.",
       icon: <MessageSquare className="h-5 w-5 text-muted-foreground" />,
-      type: "agentNode",
+      type: "pdfNode",
       defaultData: {
         label: "Chat with PDF Agent",
         description: "Chat with your uploaded PDFs",
@@ -101,23 +104,36 @@ export function Sidebar() {
 
       <SheetContent
         side="left"
-        className="w-[330px] top-16 fixed overflow-y-auto h-[calc(100vh-4rem)] flex flex-col border-r border-border select-none"
+        className="w-[330px] top-16 fixed  h-[calc(100vh-4rem)] flex flex-col border-r border-border select-none"
         onInteractOutside={(e) => e.preventDefault()}
       >
         <SheetHeader className="flex-shrink-0 px-4 py-3 border-b border-border">
           <SheetTitle className="text-3xl leading-[52.8px] tracking-[-1.5px] font-semibold">
             Agents
           </SheetTitle>
-          <p className="text-sm text-muted-foreground">
-            Agents and tools available
-          </p>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">
+              Agents and Tools
+            </span>
+            <HoverCard>
+              <HoverCardTrigger>
+                <HelpCircle className="h-4 w-4 text-muted-foreground" />
+              </HoverCardTrigger>
+              <HoverCardContent side="right">
+                <p className="text-sm">
+                  Drag and drop agents into the canvas to build your AI
+                  workflows.
+                </p>
+              </HoverCardContent>
+            </HoverCard>
+          </div>
         </SheetHeader>
 
-        <div className="flex-1 overflow-y-hidden px-4 py-5 space-y-4">
+        <ScrollArea className="flex-1 h-96 px-4 py-5 space-y-4">
           {agents.map((agent, index) => (
             <Card
               key={index}
-              className="border border-border shadow-none cursor-grab active:cursor-grabbing"
+              className="border border-border shadow-none cursor-grab active:cursor-grabbing my-4"
               draggable
               onDragStart={(e) => onDragStart(e, agent)}
             >
@@ -132,7 +148,7 @@ export function Sidebar() {
               </CardContent>
             </Card>
           ))}
-        </div>
+        </ScrollArea>
         <SheetFooter>
           <MinimapToggle />
         </SheetFooter>

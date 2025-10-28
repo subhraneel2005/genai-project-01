@@ -16,6 +16,7 @@ import { Separator } from "@/components/ui/separator";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { ActiveModal } from "./AuthModals";
+import VerifyOtp from "./VerifyOtpModal";
 
 export const title = "Signup Form";
 
@@ -44,14 +45,14 @@ export default function Signup({ activeModal, setActiveModal }: SignupProps) {
         </DialogHeader>
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Full name</Label>
-            <Input id="name" placeholder="John Doe" />
+            <Label htmlFor="name">Username</Label>
+            <Input id="name" placeholder="cheeseNugget" />
           </div>
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" placeholder="you@example.com" type="email" />
+            <Input id="email" placeholder="nugget@example.com" type="email" />
           </div>
-          <div className="space-y-2">
+          {/* <div className="space-y-2">
             <Label htmlFor="password-toggle">Password</Label>
             <div className="relative">
               <Input
@@ -74,8 +75,10 @@ export default function Signup({ activeModal, setActiveModal }: SignupProps) {
                 )}
               </Button>
             </div>
-          </div>
-          <Button className="w-full">Create Account</Button>
+          </div> */}
+          <VerifyOtp>
+            <Button className="w-full">Create Account</Button>
+          </VerifyOtp>
           <div className="relative flex items-center gap-2">
             <Separator className="flex-1" />
             <span className="shrink-0 px-2 text-muted-foreground text-xs uppercase">

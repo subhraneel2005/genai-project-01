@@ -17,6 +17,7 @@ import AgentNode from "./AgentNode";
 import WebSearchNode from "./WebSearchNode";
 import ReportGeneratorNode from "./ReportGeneratorNode";
 import EmptyState from "./EmptyMessage";
+import PDFAgentNode from "./PdfNode";
 
 const initialNodes: any[] = [];
 
@@ -24,11 +25,11 @@ const initialEdges: any[] = [];
 
 const nodeTypes = {
   agentNode: AgentNode,
+  pdfNode: PDFAgentNode,
   webSearchNode: WebSearchNode,
   reportGeneratorNode: ReportGeneratorNode,
 };
 
-// --- Inner Canvas (for ReactFlowProvider) ---
 function InnerCanvas() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);

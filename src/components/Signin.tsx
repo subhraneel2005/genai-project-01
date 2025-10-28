@@ -17,6 +17,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { Separator } from "./ui/separator";
 import { ActiveModal } from "./AuthModals";
+import VerifyOtp from "./VerifyOtpModal";
 
 export const title = "Signin Form";
 interface SigninProps {
@@ -47,7 +48,7 @@ export default function Signin({ activeModal, setActiveModal }: SigninProps) {
             <Label htmlFor="email">Email</Label>
             <Input id="email" placeholder="you@example.com" type="email" />
           </div>
-          <div className="space-y-2">
+          {/* <div className="space-y-2">
             <Label htmlFor="password-toggle">Password</Label>
             <div className="relative">
               <Input
@@ -70,7 +71,7 @@ export default function Signin({ activeModal, setActiveModal }: SigninProps) {
                 )}
               </Button>
             </div>
-          </div>
+          </div> */}
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <Checkbox id="remember" />
@@ -80,7 +81,9 @@ export default function Signin({ activeModal, setActiveModal }: SigninProps) {
             </div>
           </div>
         </div>
-        <Button className="w-full">Sign In</Button>
+        <VerifyOtp>
+          <Button className="w-full">Sign In</Button>
+        </VerifyOtp>
         <div className="relative flex items-center gap-2">
           <Separator className="flex-1" />
           <span className="shrink-0 px-2 text-muted-foreground text-xs uppercase">
