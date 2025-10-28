@@ -105,7 +105,7 @@ export default function ProfileSettings() {
                       <img
                         src="/gemini.png"
                         alt="Gemini"
-                        className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 opacity-70"
+                        className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2"
                       />
                       <Input
                         className="pl-10 bg-background font-mono"
@@ -158,7 +158,7 @@ export default function ProfileSettings() {
                       <img
                         src="/search.png"
                         alt="Serper"
-                        className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 opacity-70"
+                        className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2"
                       />
                       <Input
                         className="pl-10 bg-background font-mono"
