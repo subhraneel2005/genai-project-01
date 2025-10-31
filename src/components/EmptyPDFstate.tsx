@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import { Plus, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,6 +11,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+import { usePdfStore } from "@/stores/usePdfStore";
 
 export const title = "Empty with Single Action";
 
@@ -18,6 +20,34 @@ export default function EmptyPDFstate({
 }: {
   handleChange: () => void;
 }) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { setPdfFile, setPdfName, setPdfDataUrl, setOpen } = usePdfStore();
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && file.type === "application/pdf") {
+      // Convert to data URL
+      const reader = new FileReader();
+      reader.onload = () => {
+        setPdfDataUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+
+      // Store file and metadata in Zustand
+      setPdfFile(file);
+      setPdfName(file.name);
+
+      setOpen(true);
+
+      // Trigger the state change in parent
+      handleChange();
+    }
+  };
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
   return (
     <Empty>
       <EmptyHeader>
@@ -28,7 +58,14 @@ export default function EmptyPDFstate({
         <EmptyDescription>Get started by uploading your pdf.</EmptyDescription>
       </EmptyHeader>
       <EmptyContent>
-        <Button onClick={handleChange}>
+        <input
+          type="file"
+          ref={fileInputRef}
+          className="hidden"
+          accept="application/pdf"
+          onChange={handleFileChange}
+        />
+        <Button onClick={handleUploadClick}>
           <Upload />
           Upload pdf
         </Button>

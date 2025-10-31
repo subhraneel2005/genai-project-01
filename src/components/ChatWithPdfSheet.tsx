@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Sheet,
   SheetContent,
@@ -7,23 +9,27 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import ChatInterface from "./ChatInterface";
+import { usePdfStore } from "@/stores/usePdfStore";
 
-export const title = "Sheet with Title and Description";
+const ChatWithPdfSheet = ({ children }: { children: React.ReactNode }) => {
+  const { open, setOpen } = usePdfStore();
 
-const ChatWithPdfSheet = ({ children }: { children: React.ReactNode }) => (
-  <Sheet>
-    <SheetTrigger asChild>{children}</SheetTrigger>
-    <SheetContent>
-      <SheetHeader>
-        <SheetTitle>Chat with PDF</SheetTitle>
-        <SheetDescription>
-          This is a description that provides additional context about the sheet
-          content.
-        </SheetDescription>
-        <ChatInterface />
-      </SheetHeader>
-    </SheetContent>
-  </Sheet>
-);
+  return (
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger asChild>{children}</SheetTrigger>
+      <SheetContent className="overflow-hidden w-[40vw] max-w-6xl sm:max-w-6xl">
+        <SheetHeader>
+          <SheetTitle>Chat with PDF</SheetTitle>
+          <SheetDescription>
+            Ask questions about your PDF document and get instant answers.
+          </SheetDescription>
+        </SheetHeader>
+        <div className="mt-6 p-2 flex justify-center w-full items-center">
+          <ChatInterface />
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+};
 
 export default ChatWithPdfSheet;

@@ -1,12 +1,10 @@
 "use client";
 
-import React, { useRef, useState } from "react";
-import { Input } from "./ui/input";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Conversation,
   ConversationContent,
   ConversationEmptyState,
-  ConversationScrollButton,
 } from "@/components/ai-elements/conversation";
 import {
   Message,
@@ -32,14 +30,12 @@ import {
   PromptInputHeader,
   PromptInputBody,
   PromptInputFooter,
-  PromptInputAttachments,
-  PromptInputAttachment,
 } from "@/components/ai-elements/prompt-input";
 
 import {
   CopyIcon,
-  CrossIcon,
   ExternalLink,
+  Loader2,
   MessageSquare,
   PlusIcon,
   RefreshCcwIcon,
@@ -49,8 +45,8 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { Response } from "./ai-elements/response";
 import { Button } from "./ui/button";
-import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
+import { usePdfStore } from "@/stores/usePdfStore";
 
 async function convertFilesToDataURLs(
   files: FileList
@@ -122,12 +118,16 @@ export default function ChatInterface() {
       });
 
       setInput("");
-      setAttachments([]);
-      setFiles(undefined);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
+      // setAttachments([]);
+      // setFiles(undefined);
+      // if (fileInputRef.current) {
+      //   fileInputRef.current.value = "";
+      // }
     }
+  };
+
+  const handleRemoveAttachment = (fileId: string) => {
+    setAttachments((prev) => prev.filter((f) => f.id !== fileId));
   };
 
   const actions = [
@@ -142,6 +142,21 @@ export default function ChatInterface() {
       onClick: () => {},
     },
   ];
+
+  const { pdfFile, pdfName, pdfDataUrl } = usePdfStore();
+
+  useEffect(() => {
+    if (pdfFile && pdfDataUrl) {
+      setAttachments([
+        {
+          id: `pdf-${Date.now()}`,
+          name: pdfName,
+          contentType: pdfFile.type,
+          file: pdfFile,
+        },
+      ]);
+    }
+  }, [pdfFile, pdfName, pdfDataUrl]);
 
   return (
     <div className="bg-background border border-accent max-w-4xl mt-6 w-full px-4 py-4 rounded-2xl shadow-lg">
@@ -159,84 +174,98 @@ export default function ChatInterface() {
             />
           ) : (
             messages.map((message) => (
-              <Message from={message.role} key={message.id}>
-                <MessageContent>
-                  {message.parts.map((part, i) => {
-                    switch (part.type) {
-                      case "text":
-                        return (
-                          <div>
-                            <Response key={`${message.id}-${i}`}>
-                              {part.text}
-                            </Response>
-                            <Actions className="mt-4">
-                              {actions.map((action) => (
-                                <Action
-                                  variant={"secondary"}
-                                  size={"icon-sm"}
-                                  onClick={action.onClick}
-                                  key={action.label}
-                                  label={action.label}
-                                >
-                                  <action.icon className="size-4" />
-                                </Action>
-                              ))}
-                            </Actions>
-                          </div>
-                        );
-                      case "reasoning":
-                        return (
-                          <Reasoning
-                            className="w-full"
-                            isStreaming={
-                              message.parts[-1]?.type === "reasoning" &&
-                              status === "streaming"
-                            }
-                          >
-                            <ReasoningTrigger />
-                            <ReasoningContent>{part.text}</ReasoningContent>
-                          </Reasoning>
-                        );
-                      case "file":
-                        return (
-                          <Badge
-                            key={`${message.id}-${i}`}
-                            variant="secondary"
-                            className="flex items-center gap-2 px-3 py-2 mb-2"
-                          >
-                            <img
-                              src="/acrobat.png"
-                              alt="PDF"
-                              className="size-5 object-contain"
-                            />
-                            <span className="text-sm font-medium">
-                              {part.filename}
-                            </span>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-5 w-5 ml-2"
-                              onClick={() => {
-                                const newWindow = window.open();
-                                if (newWindow) {
-                                  newWindow.document.write(
-                                    `<iframe src="${part.url}" width="100%" height="100%" style="border:none;"></iframe>`
-                                  );
-                                }
-                              }}
+              <>
+                <Message from={message.role} key={message.id}>
+                  <MessageContent>
+                    {message.parts.map((part, i) => {
+                      switch (part.type) {
+                        case "text":
+                          return (
+                            <div>
+                              <Response key={`${message.id}-${i}`}>
+                                {part.text}
+                              </Response>
+                              <Actions className="mt-4">
+                                {actions.map((action) => (
+                                  <Action
+                                    variant={"secondary"}
+                                    size={"icon-sm"}
+                                    onClick={action.onClick}
+                                    key={action.label}
+                                    label={action.label}
+                                  >
+                                    <action.icon className="size-4" />
+                                  </Action>
+                                ))}
+                              </Actions>
+                            </div>
+                          );
+                        case "reasoning":
+                          return (
+                            <Reasoning
+                              className="w-full"
+                              isStreaming={
+                                message.parts[-1]?.type === "reasoning" &&
+                                status === "streaming"
+                              }
                             >
-                              <ExternalLink className="h-3.5 w-3.5" />
-                            </Button>
-                          </Badge>
-                        );
-                      default:
-                        return null;
-                    }
-                  })}
-                </MessageContent>
-                <MessageAvatar name={message.role} src={message.role} />
-              </Message>
+                              <ReasoningTrigger />
+                              <ReasoningContent>{part.text}</ReasoningContent>
+                            </Reasoning>
+                          );
+                        case "file":
+                          return (
+                            <Badge
+                              key={`${message.id}-${i}`}
+                              variant="secondary"
+                              className="flex items-center gap-2 px-3 py-2 mb-2"
+                            >
+                              <img
+                                src="/acrobat.png"
+                                alt="PDF"
+                                className="size-5 object-contain"
+                              />
+                              <span className="text-sm font-medium">
+                                {part.filename}
+                              </span>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-5 w-5 ml-2"
+                                onClick={() => {
+                                  const newWindow = window.open();
+                                  if (newWindow) {
+                                    newWindow.document.write(
+                                      `<iframe src="${part.url}" width="100%" height="100%" style="border:none;"></iframe>`
+                                    );
+                                  }
+                                }}
+                              >
+                                <ExternalLink className="h-3.5 w-3.5" />
+                              </Button>
+                            </Badge>
+                          );
+                        default:
+                          return null;
+                      }
+                    })}
+                  </MessageContent>
+                  <MessageAvatar name={message.role} src={message.role} />
+                </Message>
+              </>
             ))
+          )}
+
+          {status === "submitted" && (
+            <Message from="assistant">
+              <MessageContent>
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Loader2 className="size-4 animate-spin" />
+                  <span>Generating response...</span>
+                </div>
+              </MessageContent>
+              <MessageAvatar name="assistant" src="assistant" />
+            </Message>
           )}
         </ConversationContent>
       </Conversation>
@@ -269,13 +298,7 @@ export default function ChatInterface() {
                     variant="ghost"
                     size="icon"
                     className="h-5 w-5"
-                    onClick={() => {
-                      setAttachments((prev) =>
-                        prev.filter((f) => f.id !== file.id)
-                      );
-                      setFiles(undefined);
-                      if (fileInputRef.current) fileInputRef.current.value = "";
-                    }}
+                    onClick={() => handleRemoveAttachment(file.id)}
                   >
                     <X className="h-3.5 w-3.5" />
                   </Button>
