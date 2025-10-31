@@ -8,7 +8,7 @@ interface PdfStore {
 }
 
 export const usePdfStore = create<PdfStore>((set) => ({
-  pdfUploaded: true,
+  pdfUploaded: false,
   setPdfUploaded: (uploaded: boolean) => set({ pdfUploaded: uploaded }),
   pdfName: "jghjhjh",
   setPdfName: (pdf: string) => set({ pdfName: pdf }),

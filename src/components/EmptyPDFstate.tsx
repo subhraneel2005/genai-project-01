@@ -13,7 +13,11 @@ import {
 
 export const title = "Empty with Single Action";
 
-export default function EmptyPDFstate() {
+export default function EmptyPDFstate({
+  handleChange,
+}: {
+  handleChange: () => void;
+}) {
   return (
     <Empty>
       <EmptyHeader>
@@ -24,7 +28,7 @@ export default function EmptyPDFstate() {
         <EmptyDescription>Get started by uploading your pdf.</EmptyDescription>
       </EmptyHeader>
       <EmptyContent>
-        <Button>
+        <Button onClick={handleChange}>
           <Upload />
           Upload pdf
         </Button>

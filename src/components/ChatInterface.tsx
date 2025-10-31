@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useRef, useState } from "react";
 import { Input } from "./ui/input";
 import {
   Conversation,
@@ -14,37 +14,132 @@ import {
   MessageContent,
 } from "@/components/ai-elements/message";
 
-import { MessageSquare } from "lucide-react";
-import UserInput from "./Input";
+import {
+  Reasoning,
+  ReasoningContent,
+  ReasoningTrigger,
+} from "@/components/ai-elements/reasoning";
+
+import { Action, Actions } from "@/components/ai-elements/actions";
+
+import {
+  PromptInput,
+  PromptInputSubmit,
+  PromptInputTextarea,
+  PromptInputTools,
+  PromptInputMessage,
+  PromptInputButton,
+  PromptInputHeader,
+  PromptInputBody,
+  PromptInputFooter,
+  PromptInputAttachments,
+  PromptInputAttachment,
+} from "@/components/ai-elements/prompt-input";
+
+import {
+  CopyIcon,
+  CrossIcon,
+  ExternalLink,
+  MessageSquare,
+  PlusIcon,
+  RefreshCcwIcon,
+  X,
+} from "lucide-react";
+import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport } from "ai";
+import { Response } from "./ai-elements/response";
+import { Button } from "./ui/button";
+import { Card, CardContent } from "./ui/card";
+import { Badge } from "./ui/badge";
+
+async function convertFilesToDataURLs(
+  files: FileList
+): Promise<
+  { type: "file"; filename: string; mediaType: string; url: string }[]
+> {
+  return Promise.all(
+    Array.from(files).map(
+      (file) =>
+        new Promise<{
+          type: "file";
+          filename: string;
+          mediaType: string;
+          url: string;
+        }>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            resolve({
+              type: "file",
+              filename: file.name,
+              mediaType: file.type,
+              url: reader.result as string, // Data URL
+            });
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        })
+    )
+  );
+}
 
 export default function ChatInterface() {
-  // 🧠 Dummy messages for testing the UI
-  const messages = [
+  const { messages, setMessages, status, sendMessage, regenerate, stop } =
+    useChat({
+      transport: new DefaultChatTransport({
+        api: "/api/chat",
+      }),
+    });
+
+  const [input, setInput] = useState("");
+  const [files, setFiles] = useState<FileList | undefined>(undefined);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [pdfPreview, setPdfPreview] = useState<string | null>(null);
+  const [attachments, setAttachments] = useState<
+    Array<{ id: string; name: string; contentType: string; file: File }>
+  >([]);
+
+  const handleSubmit = async (
+    message: PromptInputMessage,
+    e: React.FormEvent
+  ) => {
+    e.preventDefault();
+    if (input.trim() || attachments.length > 0) {
+      const fileParts =
+        attachments.length > 0
+          ? await convertFilesToDataURLs(
+              (() => {
+                const dt = new DataTransfer();
+                attachments.forEach((att) => dt.items.add(att.file));
+                return dt.files;
+              })()
+            )
+          : [];
+
+      sendMessage({
+        role: "user",
+        parts: [{ type: "text", text: input }, ...fileParts],
+      });
+
+      setInput("");
+      setAttachments([]);
+      setFiles(undefined);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
+
+  const actions = [
     {
-      id: 1,
-      from: "user",
-      content: "Hey! Can you summarize this paragraph for me?",
-      avatar: "https://github.com/shadcn.png",
+      icon: RefreshCcwIcon,
+      label: "Retry",
+      onClick: () => regenerate(),
     },
     {
-      id: 2,
-      from: "ai",
-      content:
-        "Sure! Its basically saying that Zustand is a lightweight, fast state management library for React that can persist data using localStorage.",
-      avatar: "https://github.com/openai.png",
-    },
-    {
-      id: 3,
-      from: "user",
-      content: "Perfect, thanks! Also, can I use it with Next.js App Router?",
-      avatar: "https://github.com/shadcn.png",
-    },
-    {
-      id: 4,
-      from: "ai",
-      content:
-        "Absolutely. Zustand works great with both App Router and Client Components — you just need to mark the file as `use client`.",
-      avatar: "https://github.com/openai.png",
+      icon: CopyIcon,
+      label: "Copy",
+      onClick: () => {},
     },
   ];
 
@@ -63,23 +158,175 @@ export default function ChatInterface() {
               description="Start a conversation to see messages here"
             />
           ) : (
-            messages.map((message, index) => (
-              <Message
-                from={index % 2 === 0 ? "user" : "assistant"}
-                key={message.id}
-              >
-                <MessageContent>{message.content}</MessageContent>
-                <MessageAvatar name={message.from} src={message.avatar} />
+            messages.map((message) => (
+              <Message from={message.role} key={message.id}>
+                <MessageContent>
+                  {message.parts.map((part, i) => {
+                    switch (part.type) {
+                      case "text":
+                        return (
+                          <div>
+                            <Response key={`${message.id}-${i}`}>
+                              {part.text}
+                            </Response>
+                            <Actions className="mt-4">
+                              {actions.map((action) => (
+                                <Action
+                                  variant={"secondary"}
+                                  size={"icon-sm"}
+                                  onClick={action.onClick}
+                                  key={action.label}
+                                  label={action.label}
+                                >
+                                  <action.icon className="size-4" />
+                                </Action>
+                              ))}
+                            </Actions>
+                          </div>
+                        );
+                      case "reasoning":
+                        return (
+                          <Reasoning
+                            className="w-full"
+                            isStreaming={
+                              message.parts[-1]?.type === "reasoning" &&
+                              status === "streaming"
+                            }
+                          >
+                            <ReasoningTrigger />
+                            <ReasoningContent>{part.text}</ReasoningContent>
+                          </Reasoning>
+                        );
+                      case "file":
+                        return (
+                          <Badge
+                            key={`${message.id}-${i}`}
+                            variant="secondary"
+                            className="flex items-center gap-2 px-3 py-2 mb-2"
+                          >
+                            <img
+                              src="/acrobat.png"
+                              alt="PDF"
+                              className="size-5 object-contain"
+                            />
+                            <span className="text-sm font-medium">
+                              {part.filename}
+                            </span>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-5 w-5 ml-2"
+                              onClick={() => {
+                                const newWindow = window.open();
+                                if (newWindow) {
+                                  newWindow.document.write(
+                                    `<iframe src="${part.url}" width="100%" height="100%" style="border:none;"></iframe>`
+                                  );
+                                }
+                              }}
+                            >
+                              <ExternalLink className="h-3.5 w-3.5" />
+                            </Button>
+                          </Badge>
+                        );
+                      default:
+                        return null;
+                    }
+                  })}
+                </MessageContent>
+                <MessageAvatar name={message.role} src={message.role} />
               </Message>
             ))
           )}
         </ConversationContent>
-
-        {/* Scroll to bottom button */}
-        <ConversationScrollButton />
       </Conversation>
 
-      <UserInput />
+      <PromptInput
+        onSubmit={status === "streaming" ? () => stop() : handleSubmit}
+        className="mt-4"
+      >
+        <PromptInputHeader>
+          {attachments.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-2">
+              {attachments.map((file) => (
+                <Badge
+                  key={file.id}
+                  variant="secondary"
+                  className="flex items-center justify-between gap-3 px-3 py-2 w-full sm:w-auto"
+                >
+                  <div className="flex items-center gap-2">
+                    <img
+                      src="/acrobat.png"
+                      alt="PDF"
+                      className="size-5 object-contain"
+                    />
+                    <span className="text-sm font-medium truncate max-w-[150px]">
+                      {file.name}
+                    </span>
+                  </div>
+
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-5 w-5"
+                    onClick={() => {
+                      setAttachments((prev) =>
+                        prev.filter((f) => f.id !== file.id)
+                      );
+                      setFiles(undefined);
+                      if (fileInputRef.current) fileInputRef.current.value = "";
+                    }}
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </Button>
+                </Badge>
+              ))}
+            </div>
+          )}
+        </PromptInputHeader>
+
+        <PromptInputBody>
+          <PromptInputTextarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+          />
+        </PromptInputBody>
+        <PromptInputFooter>
+          <PromptInputTools>
+            <PromptInputButton
+              variant={"secondary"}
+              onClick={() => fileInputRef?.current?.click()}
+              aria-label="Attach PDF"
+            >
+              <PlusIcon size="4" />
+            </PromptInputButton>
+            <input
+              type="file"
+              className="hidden"
+              onChange={(e) => {
+                if (e.target.files) {
+                  setFiles(e.target.files);
+                  const file = e.target.files[0];
+                  setAttachments([
+                    {
+                      id: `pdf-${Date.now()}`,
+                      name: file.name,
+                      contentType: file.type,
+                      file,
+                    },
+                  ]);
+                }
+              }}
+              accept="application/pdf"
+              ref={fileInputRef}
+            />
+            <PromptInputSubmit
+              disabled={!input && status !== "streaming"}
+              status={status}
+            />
+          </PromptInputTools>
+        </PromptInputFooter>
+      </PromptInput>
     </div>
   );
 }

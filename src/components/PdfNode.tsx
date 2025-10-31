@@ -33,7 +33,6 @@ const PDFAgentNode = ({ data }: any) => {
 
   return (
     <Card className="w-96 shadow-md border-muted bg-card">
-      {!data.isFirst && <Handle type="target" position={Position.Left} />}
       {!data.isLast && <Handle type="source" position={Position.Right} />}
 
       <CardHeader className="pb-2">
@@ -60,7 +59,7 @@ const PDFAgentNode = ({ data }: any) => {
               </p>
             </div>
           ) : (
-            <EmptyPDFstate />
+            <EmptyPDFstate handleChange={handleChange} />
           )}
         </div>
       </CardContent>

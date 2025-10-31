@@ -74,20 +74,11 @@ const WebSearchNode = ({ data }: any) => {
 
   return (
     <Card className="w-96 shadow-sm border-border border transition-all">
-      {!data.isFirst && (
-        <Handle
-          type="target"
-          position={Position.Left}
-          className="!bg-slate-400"
-        />
-      )}
-      {!data.isLast && (
-        <Handle
-          type="source"
-          position={Position.Right}
-          className="!bg-slate-400"
-        />
-      )}
+      <Handle
+        type="source"
+        position={Position.Right}
+        className="!bg-slate-400"
+      />
 
       <CardHeader className="pb-3">
         <CardTitle className="text-sm flex items-center gap-2">
