@@ -3,14 +3,17 @@
   
   # Research Agent Workspace
   
-  A collaborative AI-powered workspace for students and researchers — interact, summarize, and learn faster using Vercel AI SDK.
+   Agentic workspace for students and researchers to learn faster using AI
   
-  ![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=nextdotjs&logoColor=white)
-  ![Vercel AI SDK](https://img.shields.io/badge/Vercel%20AI%20SDK-000000?style=flat-square&logo=vercel&logoColor=white)
-  ![Prisma](https://img.shields.io/badge/Prisma-2F2F68?style=flat-square&logo=prisma&logoColor=white)
-  ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=flat-square&logo=postgresql&logoColor=white)
-</div>
-
+  <p align="center">
+  <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js" />
+  <img src="https://img.shields.io/badge/Vercel%20AI%20SDK-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel AI SDK" />
+  <img src="https://img.shields.io/badge/React_Hook_Form-333333?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React Hook Form" />
+  <img src="https://img.shields.io/badge/Zod-2B4A6F?style=for-the-badge&logo=zod&logoColor=white" alt="Zod" />
+  <img src="https://img.shields.io/badge/Resend-6F42C1?style=for-the-badge&logo=mailchimp&logoColor=white" alt="Resend" />
+  <img src="https://img.shields.io/badge/BetterAuth-0052CC?style=for-the-badge&logo=auth0&logoColor=white" alt="Better-Auth" />
+  <img src="https://img.shields.io/badge/Prisma-2F2F68?style=for-the-badge&logo=prisma&logoColor=white" alt="Prisma" />
+</p>
 ## Features
 
 - **Web Search Agent** — Find and index academic articles and research papers
