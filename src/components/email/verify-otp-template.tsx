@@ -24,7 +24,12 @@ export const ConfirmEmail = ({ validationCode }: ConfirmEmailProps) => (
       <Preview>Confirm your email address</Preview>
       <Container style={container}>
         <Section style={logoContainer}>
-          <Img src={`/logo.png`} width="120" height="36" alt="r-agent-logo" />
+          <Img
+            src="https://raw.githubusercontent.com/subhraneel2005/genai-project-01/main/public/logo.png"
+            width="120"
+            height="36"
+            alt="r-agent-logo"
+          />
         </Section>
         <Heading style={h1}>Confirm your email address</Heading>
         <Text style={heroText}>

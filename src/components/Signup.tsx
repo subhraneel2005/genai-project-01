@@ -18,8 +18,19 @@ import { useState } from "react";
 import { ActiveModal } from "./AuthModals";
 import VerifyOtp from "./VerifyOtpModal";
 import { authClient } from "@/lib/auth-client";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 
 export const title = "Signup Form";
+
+const signupSchema = z.object({
+  username: z.string().min(1, "Username is required"),
+  email: z.email("Enter a valid email address").min(1, "Email is required"),
+});
+
+type SignupFormData = z.infer<typeof signupSchema>;
 
 interface SignupProps {
   activeModal: ActiveModal | null;
@@ -27,9 +38,35 @@ interface SignupProps {
 }
 
 export default function Signup({ activeModal, setActiveModal }: SignupProps) {
-  const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const [username, setUsername] = useState("");
+
+  const {
+    handleSubmit,
+    register,
+    watch,
+    formState: { errors, isValid },
+  } = useForm<SignupFormData>({
+    resolver: zodResolver(signupSchema),
+    mode: "onBlur",
+  });
+
+  const email = watch("email");
+
+  const onSubmit = async (data: SignupFormData) => {
+    setIsLoading(true);
+    try {
+      await authClient.emailOtp.sendVerificationOtp({
+        email: data.email,
+        type: "email-verification",
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const verifyEmailHandler = async () => {
     const { data, error } = await authClient.emailOtp.sendVerificationOtp({
@@ -53,47 +90,46 @@ export default function Signup({ activeModal, setActiveModal }: SignupProps) {
             Enter your details below to create your account.
           </DialogDescription>
         </DialogHeader>
-        <div className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="name">Username</Label>
-            <Input id="name" placeholder="cheeseNugget" />
+            <Input
+              id="name"
+              placeholder="cheeseNugget"
+              {...register("username")}
+            />
+            {errors.username && (
+              <Alert className="w-full max-w-lg border-destructive/80 bg-destructive/5 text-destructive">
+                <AlertTitle>Username error</AlertTitle>
+                <AlertDescription className="text-destructive/80">
+                  {errors.username.message}
+                </AlertDescription>
+              </Alert>
+            )}
           </div>
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              {...register("email")}
               id="email"
               placeholder="nugget@example.com"
               type="email"
             />
+            {errors.email && (
+              <Alert className="w-full max-w-lg border-destructive/80 bg-destructive/5 text-destructive">
+                <AlertTitle>Email error</AlertTitle>
+                <AlertDescription className="text-destructive/80">
+                  {errors.email.message}
+                </AlertDescription>
+              </Alert>
+            )}
           </div>
-          {/* <div className="space-y-2">
-            <Label htmlFor="password-toggle">Password</Label>
-            <div className="relative">
-              <Input
-                className="bg-background"
-                id="password-toggle"
-                placeholder="Enter your password"
-                type={showPassword ? "text" : "password"}
-              />
-              <Button
-                className="absolute top-0 right-0 h-full px-3 hover:bg-transparent"
-                onClick={() => setShowPassword(!showPassword)}
-                size="icon"
-                type="button"
-                variant="ghost"
-              >
-                {showPassword ? (
-                  <EyeOff className="h-4 w-4 text-muted-foreground" />
-                ) : (
-                  <Eye className="h-4 w-4 text-muted-foreground" />
-                )}
-              </Button>
-            </div>
-          </div> */}
           <VerifyOtp>
-            <Button className="w-full" onClick={verifyEmailHandler}>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={!isValid || isLoading}
+            >
               Create Account
             </Button>
           </VerifyOtp>
@@ -125,7 +161,7 @@ export default function Signup({ activeModal, setActiveModal }: SignupProps) {
             </svg>
             Continue with Google
           </Button>
-        </div>
+        </form>
         <DialogFooter className="sm:justify-center">
           <p className="text-muted-foreground text-sm">
             Already have an account?{" "}
