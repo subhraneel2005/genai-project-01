@@ -1,47 +1,37 @@
 ---
 
 <h1 align="center">
-  <br>
-  <a href="https://github.com/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME"><img src="https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME/main/public/logo.png" alt="Secure Agent Workspace" width="200"></a>
-  <br>
-  Secure Agent Workspace
-  <br>
-</h1><h4 align="center">A collaborative AI-powered workspace for researchers and students — built using <a href="https://sdk.vercel.ai" target="_blank">Vercel AI SDK</a>.</h4><p align="center">
-  <img src="https://img.shields.io/badge/built_with-Vercel_AI_SDK-blue?style=flat-square" alt="Vercel" />
-  <img src="https://img.shields.io/badge/auth-Auth0-orange?style=flat-square" alt="Auth0" />
-  <img src="https://img.shields.io/badge/status-in_progress-yellow?style=flat-square" alt="Status" />
-  <img src="https://img.shields.io/badge/contributions-welcome-brightgreen?style=flat-square" alt="Contributions" />
-</p><p align="center">
-  <a href="#agents">Agents</a> •
-  <a href="#how-to-use">How To Use</a> •
-  <a href="#tech-stack">Tech Stack</a> •
-  <a href="#credits">Credits</a> •
-  <a href="#connect">Connect</a>
+  <br />
+  <a href="https://github.com/subhraneel2005/secure-agent-workspace"><img src="./logo.png" alt="Secure Agent Workspace" width="150"></a>
+  <br />
+  Research Agent Workspace
+  <br />
+</h1><h4 align="center">A collaborative AI-powered workspace to help students and researchers interact, summarize, and learn from academic content faster.</h4><p align="center">
+  <a href="https://nextjs.org/"><img src="https://skillicons.dev/icons?i=nextjs" alt="Next.js" height="35"></a>
+  <a href="https://sdk.vercel.ai"><img src="https://avatars.githubusercontent.com/u/14985020?s=200&v=4" alt="Vercel AI SDK" height="35"></a>
+  <a href="https://react-hook-form.com/"><img src="https://react-hook-form.com/images/logo.svg" alt="React Hook Form" height="35"></a>
+  <a href="https://zod.dev/"><img src="https://zod.dev/logo.svg" alt="Zod" height="35"></a>
+  <a href="https://resend.com/"><img src="https://avatars.githubusercontent.com/u/123961881?s=200&v=4" alt="Resend" height="35"></a>
+  <a href="https://better-auth.com/"><img src="https://better-auth.com/assets/logo/logo.png" alt="BetterAuth" height="35"></a>
+  <a href="https://www.prisma.io/"><img src="https://avatars.githubusercontent.com/u/17219288?s=200&v=4" alt="Prisma" height="35"></a>
 </p>
 ---
 
-🧠 Agents
+🔎 AI Agents
 
-🔍 Web Search Agent
-Searches and indexes academic articles and research papers.
+Web Search Agent – Find and fetch academic research papers.
 
-📄 Chat with PDF Agent
-Enables natural language chat over uploaded PDFs using embeddings + semantic search.
+Chat with PDF Agent – Chat with academic PDFs using vector embeddings + semantic search.
 
-✂️ Summarizer Agent
-Quickly summarizes longform text from PDFs, videos, or web links.
+YouTube Lecture Agent – Query and summarize YouTube lecture content via transcript extraction.
 
-📝 Notes Generator Agent
-Transforms content into structured learning notes.
+Summarizer Agent – Convert long content (PDFs, videos, articles) into digestible summaries.
 
-💾 Save Notes Tool
-Exports notes seamlessly to Notion, Google Drive, or local storage.
+Notes Generator Agent – Turn content into structured notes.
 
-🎴 Flashcards Generator Agent
-Creates spaced-repetition flashcards from notes or extracted content.
+Flashcards Generator Agent – Auto-generate spaced-repetition flashcards.
 
-🎥 Chat with YouTube Lectures Agent
-Chat with video content using transcript extraction and embeddings.
+Save Notes Tool – Send generated notes to Notion, Google Drive, or local downloads.
 
 
 
@@ -49,82 +39,71 @@ Chat with video content using transcript extraction and embeddings.
 
 🛠️ Tech Stack
 
-Backend – Node.js, Express.js, Prisma ORM
+Tech	Description
 
-Frontend – Next.js, TailwindCSS
-
-AI – Vercel AI SDK, OpenAI / Anthropic
-
-Auth – Auth0
-
-Database – PostgreSQL
-
-Vector Store – Pinecone / Supabase Vector (TBD)
+Next.js	UI and SSR framework
+Vercel AI SDK	LLM agent orchestration
+React Hook Form	Form handling and validation
+Zod	Schema validations
+Resend	Transactional emails
+Better-Auth	Authentication implementation
+Prisma	Type-safe database ORM
+PostgreSQL	Primary database
 
 
 
 ---
 
-🧩 How To Use
+🚀 Getting Started
 
-To clone and run this project, you'll need Git and Node.js. Then follow the steps below:
+To clone and run this project locally:
 
 # Clone this repository
-$ git clone https://github.com/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME
+git clone https://github.com/subhraneel2005/secure-agent-workspace
 
-# Go into the repository
-$ cd YOUR_REPO_NAME
+# Navigate into the folder
+cd secure-agent-workspace
 
 # Install dependencies
-$ npm install
+npm install
 
-# Run the dev server
-$ npm run dev
+# Start development server
+npm run dev
 
-> Note
-Make sure to add your .env.local file with the required AUTH0, database, and model keys.
+> Note: Add a .env.local file with your API keys and environment variables. See .env.example for reference.
 
-
-
-
----
-
-🤖 Powered By
-
-This project uses the following technologies:
-
-Vercel AI SDK
-
-Better-auth
-
-Resend
-
-Next.js
-
-Prisma ORM
-
-TailwindCSS
 
 
 
 ---
 
-📣 Connect
+🤝 Contributing
 
-If you're excited about this project or want to collaborate, reach out!
+Contributions are welcome! You can:
 
-🐦 Twitter: @Subhranreel55545
-💌 Email: subhraneeljobs@gmail.com
+Open an Issue
 
+Submit a Pull Request
 
----
+Share your feedback or ideas
 
-📜 License
-
-MIT
 
 
 ---
 
-> Created by Your Subhraneel
-Built with 💙 for builders and researchers.
+📬 Connect
+
+GitHub — subhraneel2005
+
+Twitter — @Subhraneel55545
+
+
+
+---
+
+📄 License
+
+MIT License
+
+
+---
