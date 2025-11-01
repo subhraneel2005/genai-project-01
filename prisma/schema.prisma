@@ -1,0 +1,43 @@
+
+generator client {
+  provider = "prisma-client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String   @id @default(cuid())
+  username       String   @unique
+  email          String   @unique
+  profilePicture String?
+  signupMethod   SignupMethod @default(EMAIL)
+  isEmailVerified Boolean @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  otps OTP[]
+}
+
+model OTP {
+  id         String   @id @default(cuid())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
+  code       String   // hashed OTP (never store plain text)
+  expiresAt  DateTime
+  purpose    OTPPurpose // e.g., SIGNUP, LOGIN, PASSWORD_RESET
+  createdAt  DateTime @default(now())
+}
+
+enum SignupMethod {
+  GOOGLE
+  EMAIL
+}
+
+enum OTPPurpose {
+  SIGNUP
+  LOGIN
+  PASSWORD_RESET
+}
