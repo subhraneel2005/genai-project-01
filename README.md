@@ -67,7 +67,7 @@
 
 ### How To Use
 
-```bash
+
 # Clone the repository
 git clone https://github.com/subhraneel2005/secure-agent-workspace
 
@@ -79,22 +79,6 @@ npm install
 
 # Start dev server
 npm run dev
-
-Environment
-
-Create a .env.local (example: .env.example) and provide:
-
-NEXT_PUBLIC_VERCEL_AI_KEY
-
-DATABASE_URL
-
-RESEND_API_KEY
-
-AUTH_SECRET / OAuth secrets
-
-VECTOR_STORE_* (if using Pinecone, etc.)
-
-
 
 ---
 
@@ -108,14 +92,11 @@ Follow code style standards
 
 Add tests where possible
 
-
-
 ---
 
 Created with ❤️ by Subhraneel
 
 For researchers and students 
-
 
 ---
 
@@ -124,7 +105,6 @@ Connect
 GitHub — https://github.com/subhraneel2005
 
 Twitter (X) — https://twitter.com/Subhraneel55545
-
 
 
 ---
