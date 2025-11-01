@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,10 +17,16 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { Label } from "@/components/ui/label";
+import { authClient } from "@/lib/auth-client";
 
 export const title = "OTP Code";
 
-export default function VerifyOtp({ children }: { children: React.ReactNode }) {
+interface VerifyOtpProps {
+  children: React.ReactNode;
+  email?: string;
+}
+
+export default function VerifyOtp({ children, email }: VerifyOtpProps) {
   const [value, setValue] = useState("");
 
   return (

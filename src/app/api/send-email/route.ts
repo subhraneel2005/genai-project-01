@@ -1,23 +1,35 @@
-import ConfirmEmail from "@/components/email/verify-otp-template";
+import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import ConfirmEmail from "@/components/email/verify-otp-template";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function POST() {
+export async function POST(req: Request) {
   try {
+    const { email, otp } = await req.json();
+
+    if (!email || !otp) {
+      return NextResponse.json(
+        { error: "Email and OTP are required" },
+        { status: 400 }
+      );
+    }
+
     const { data, error } = await resend.emails.send({
-      from: "Acme <onboarding@resend.dev>",
-      to: ["delivered@resend.dev"],
-      subject: "Hello world",
-      react: ConfirmEmail({ firstName: "John" }),
+      from: "Subhraneel <no-reply@yourdomain.com>",
+      to: [email],
+      subject: "Your Email Verification Code",
+      react: ConfirmEmail({ validationCode: otp }),
     });
 
     if (error) {
-      return Response.json({ error }, { status: 500 });
+      console.error("Email send error:", error);
+      return NextResponse.json({ error }, { status: 500 });
     }
 
-    return Response.json(data);
-  } catch (error) {
-    return Response.json({ error }, { status: 500 });
+    return NextResponse.json({ success: true, data });
+  } catch (err: any) {
+    console.error("Unexpected error:", err);
+    return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }

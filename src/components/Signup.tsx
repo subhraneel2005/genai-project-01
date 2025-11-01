@@ -17,6 +17,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { ActiveModal } from "./AuthModals";
 import VerifyOtp from "./VerifyOtpModal";
+import { authClient } from "@/lib/auth-client";
 
 export const title = "Signup Form";
 
@@ -27,6 +28,15 @@ interface SignupProps {
 
 export default function Signup({ activeModal, setActiveModal }: SignupProps) {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+
+  const verifyEmailHandler = async () => {
+    const { data, error } = await authClient.emailOtp.sendVerificationOtp({
+      email,
+      type: "email-verification",
+    });
+  };
 
   return (
     <Dialog
@@ -50,7 +60,13 @@ export default function Signup({ activeModal, setActiveModal }: SignupProps) {
           </div>
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" placeholder="nugget@example.com" type="email" />
+            <Input
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              id="email"
+              placeholder="nugget@example.com"
+              type="email"
+            />
           </div>
           {/* <div className="space-y-2">
             <Label htmlFor="password-toggle">Password</Label>
@@ -77,7 +93,9 @@ export default function Signup({ activeModal, setActiveModal }: SignupProps) {
             </div>
           </div> */}
           <VerifyOtp>
-            <Button className="w-full">Create Account</Button>
+            <Button className="w-full" onClick={verifyEmailHandler}>
+              Create Account
+            </Button>
           </VerifyOtp>
           <div className="relative flex items-center gap-2">
             <Separator className="flex-1" />
